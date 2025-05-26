@@ -1,0 +1,146 @@
+window=Tk()
+import global_variables
+window.title('Typing Speed Test')
+window.geometry("750x500")
+C = Canvas(window, bg="blue", height=790, width=550)
+filename = PhotoImage(file = r"C:\Users\akash\Downloads\bg.png")
+background_label = Label(window, image=filename)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+C.pack()
+db2 = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project")
+cursor2 = db2.cursor()
+
+savequery2 = "select vname from login_details where login_time = (select
+max(login_time) from login_details);"
+cursor2.execute(savequery2)
+dbrec2 = cursor2.fetchall()
+for i in dbrec2:
+ global_variables.username=i[0]
+db2.close()
+print("in middle screen"+global_variables.username)
+def launch():
+ os.system('python speedtyping.py')
+
+def openNewWindow():
+ window1=Tk()
+ window1.title('Hello')
+ window1.geometry("750x500")
+
+def openNewWindow_instr():
+ window1=Tk()
+ window1.title('Instructions')
+ window1.geometry("750x500")
+ T = tk.Text(window1, height=50, width=120)
+ T.pack()
+ T.insert(tk.END, " INSTRUCTIONS\n\nThis Test requires a basic Windows or
+Mac system with a keyboard and mouse attached to it.\nIn order to run the test the
+participant will need to pre-install Python Library into his\noperating system.\nTo
+begin the test, click START in the opening screen and this will launch the test.\n\nA
+randomly generated test sentence will be displayed along with the text box in the
+screen. \nClick the text box once and begin to type the displayed sentence. \nTimer
+will start immediately once you start the typing.\n\nOnce you have finsihed typing
+press enter in your keyboard to indicate the completion. This\nmarks the end of the
+test. \nOnce the test is finished, you will be displayed your Accuracy,Time and
+WPM(Words Per Minute) below the typed text box.\n\nIf you like to repeat the test
+click CLEAR which will resume the test once again.\nIf you like to exit the test click
+EXIT and this will return to your desktop screen.\n")
+
+
+ def openNewWindow_graph():
+ window1=Tk()
+ db2 = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project")
+ cursor2 = db2.cursor()
+
+ savequery2 = "select vname from login_details where login_time = (select
+max(login_time) from login_details);"
+ cursor2.execute(savequery2)
+ dbrec2 = cursor2.fetchall()
+ for i in dbrec2:
+
+global_variables.username=i[0]
+
+db2.close()
+ db = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project",
+ port="3306")
+ cursor = db.cursor()
+ savequery = "select typespeed,accuracy from user_stats where vname = %(value)s
+"
+ params = {'value': global_variables.username}
+ cursor.execute(savequery, params)
+
+ t_speed=[]
+ accu=[]
+ run=[]
+ i=1
+ for row in records:
+ t_speed.append(row[0])
+ accu.append(row[1])
+ run.append(i)
+ i=i+1
+ print(t_speed)
+ print(accu)
+ print(run)
+
+ window1.title('Graph')
+ window1.geometry("750x500")
+
+ btn = tk.Label(window1, text='Speed / Accuracy Plot for the user : ' +
+global_variables.username)
+ btn.grid(row=0, column=0, padx=20, pady=10)
+
+ if i<=2 :
+ fig = plt.figure(figsize=(1,4))
+ elif i<=4 :
+
+ fig = plt.figure(figsize=(5,4))
+ else :
+ fig = plt.figure(figsize=(5,4))
+ plt.xlabel('Run')
+ plt.ylabel('Speed and Accuracy')
+ ax1 = plt.axes()
+ x_axis = ax1.axes.get_xaxis()
+ x_axis.set_visible(False)
+ x=np.arange(0,i-1)
+ if i<=2 :
+ plt.bar(x,t_speed,color='m',width=0.1,label='Speed in seconds')
+ plt.bar(x+0.1,accu,color='y',width=0.1,label='Accuracy in wpm')
+ elif i<=4 :
+ plt.bar(x,t_speed,color='m',width=0.25,label='Speed in seconds')
+ plt.bar(x+0.25,accu,color='y',width=0.25,label='Accuracy in wpm')
+ else :
+ plt.bar(x,t_speed,color='m',width=0.25,label='Speed in seconds')
+ plt.bar(x+0.25,accu,color='y',width=0.25,label='Accuracy in wpm')
+
+ plt.show()
+ canvas = FigureCanvasTkAgg(fig, master=window1)
+ canvas.draw()
+ canvas.get_tk_widget().grid(row=1, column=0, ipadx=90, ipady=20)
+myFont = font.Font(family='times', size=20, weight='bold')
+photo = PhotoImage(file=r"C:\Users\akash\Downloads\bg.png")
+label_heading = Label(window,font=myFont, text = "Hi " +
+global_variables.username + " ! Welcome to Typing Speed Test",bg='light
+blue').place(x=155, y = 40)
+
+btn = Button(window, text = 'START', bd = '15', width=13, height=3,bg =
+"forestgreen",fg='black',activebackground='lawn green',command = launch,
+font="times").place(x=280, y=180)
+print(global_variables.username)
+btn2 = Button(window, text = 'EXIT', bd = '15', width=13, height=3,bg =
+"orangered",fg='black',activebackground='red',command=window.destroy,font="tim
+es").place(x=60, y=180)
+btn3 = Button(window, text = 'GRAPH', bd = '15', width=13, height=3,bg =
+"yellowgreen",activebackground='greenyellow',command =
+openNewWindow_graph,font="times").place(x=500, y=180)
+btn5 = Button(window, text = 'INSTRUCTIONS', bd = '15', width=13, height=3,bg
+= "orange",activebackground='sea green',command =
+openNewWindow_instr,font="times").place(x=280, y=380)
+window.mainloop()
