@@ -1,0 +1,200 @@
+Code for Login Screen
+
+window = Tk()
+window.title("LOGIN PAGE")
+window.geometry("750x500")
+window.config(background = "black", pady=0)
+import global_variables
+C = Canvas(window, bg="blue", height=790, width=550)
+filename = PhotoImage(file = r"C:\Users\akash\Downloads\bg.png")
+background_label = Label(window, image=filename)
+10
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+C.pack()
+lb1 = Label(window, text = "Login Form", bg="light blue",fg="black", font=20)
+lb1.place(x=325, y=5)
+lb2_u = Label(window, text = "Username - ",bg="light blue",fg="black")
+txtF_u = Entry(window)
+lb2_u.place(x=200, y=100)
+txtF_u.place(x=300, y=100)
+lb2_p = Label(window, text = "Password - ", bg="light blue" ,fg="black")
+txtF_p = Entry(window,show="*")
+lb2_p.place(x=200, y=150)
+txtF_p.place(x=300,y=150)
+bt = Button(window, text="Login")
+def dis():
+ global_variables.username = txtF_u.get()
+ print (global_variables.username)
+ global_variables.passwd = txtF_p.get()
+ data=(global_variables.username,global_variables.passwd)
+ db = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project",
+
+ port="3306")
+cursor = db.cursor()
+ savequery = "select vname,pwd from users"
+ cursor.execute(savequery)
+ dbrec = cursor.fetchall()
+ print(dbrec)
+ for i in dbrec:
+ print(i[0])
+ if (i[0]== global_variables.username and i[1]==global_variables.passwd):
+ now = datetime.now()
+
+ formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+ db1 = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project")
+ cursor1 = db1.cursor()
+
+ savequery1 = "insert into login_details values(%s,%s)"
+ recdata1=(global_variables.username,formatted_date)
+ cursor1.execute(savequery1,recdata1)
+ db1.commit()
+ db1.close()
+
+ window.destroy()
+ os.system('python middle_screen.py')
+
+break
+def dis2(txtF_u_input, txtF_p_input):
+ global_variables.username = txtF_u_input
+ global_variables.passwd = txtF_p_input
+ global_variables.username = txtF_u.get()
+ global_variables.passwd = txtF_p.get()
+ data=(username,passwd)
+ db = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project",
+ port="3306")
+ cursor = db.cursor()
+ savequery = "select vname,pwd from users"
+ cursor.execute(savequery)
+ dbrec = cursor.fetchall()
+ print(dbrec)
+ for i in dbrec:
+ print(i[0])
+ if (i[0]== global_variables.username and i[1]==global_variables.passwd):
+ now = datetime.now()
+
+
+ formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+ db1 = mysql.connector.connect(host ="localhost",
+
+user = "root",
+ password = "akash",
+ database ="project")
+ cursor1 = db1.cursor()
+
+ savequery1 = "insert into login_details values(%s,%s)"
+ recdata1=(global_variables.username,formatted_date)
+ cursor1.execute(savequery1,recdata1)
+ db1.commit()
+ db1.close()
+ window.destroy()
+ os.system('python speedtyping.py')
+ break
+def login_back():
+ window2 = Tk()
+ window2.title("LOGIN PAGE")
+ window2.geometry("750x500")
+ window2.config(background = "black", pady=10)
+ lb11 = Label(window2, text = "Login Form", bg = "black", fg="white", font=20)
+14
+ lb11.place(x=210, y=5)
+ lb2_u1 = Label(window2, text = "Username - ", bg="light blue", fg="white")
+ txtF_u = Entry(window2)
+ lb2_u1.place(x=80, y=50)
+
+txtF_u.place(x=200, y=50)
+ lb2_p1 = Label(window2, text = "Password - ", bg="light blue", fg="white")
+ txtF_p = Entry(window2)
+ lb2_p1.place(x=80, y=90)
+ txtF_p.place(x=200,y=90)
+ display = Label(window2, text="Access : ", bg="black")
+ bt21 = Button(window2, text="Login")
+ event_handler=event_lambda(dis2,txtF_u,txtF_p)
+ bt21.config(command=event_handler)
+ bt21.place(x=110, y=120)
+ bt22 = Button(window2, text="SignUp", command=newsign)
+ bt22.place(x=170, y=120)
+ display.place(x=110, y=155)
+def reports():
+ mycon = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project",
+
+ port="3306")
+ if mycon.is_connected():
+ df=pd.read_sql("select vname,age from users")
+ print(df)
+
+bt.config(command=dis)
+bt.place(x=300, y=200)
+def newsign():
+ sign=Tk()
+ sign.title("SignUp")
+ sign.geometry("750x500")
+ sign.config(background = "light blue", pady=1
+ Reg_lbs = Label(sign, text = "REGISTRATION", bg = "light blue", fg="black",
+font=20)
+ Reg_lbs.place(x=325, y=5)
+ user_lbs= Label(sign, text = "Username - ", bg="light blue", fg="black")
+ user_F = Entry(sign)
+ user_lbs.place(x=278, y=60)
+ user_F.place(x=350, y=60)
+ Age_lbs = Label(sign, text ="Age - ", bg="light green", fg="black")
+ Age_F = Entry(sign)
+ Age_lbs.place(x=310, y=90)
+ Age_F.place(x=350, y=90)
+
+ Email_lbl = Label(sign, text ="Email - ", bg="light green", fg="black")
+ Email_F = Entry(sign)
+ Email_lbl.place(x=300, y=120)
+ Email_F.place(x=350, y=120)
+ pwd_lbs = Label(sign, text = "Password - ", bg="light green", fg="black")
+ pwd_F = Entry(sign)
+ pwd_lbs.place(x=280, y=150)
+ pwd_F.place(x=350,y=150)
+ cpwd_lbs = Label(sign, text = "Cofirm Password - ", bg="light green",
+fg="black")
+ cpwd_F = Entry(sign)
+ cpwd_lbs.place(x=240, y=180)
+ cpwd_F.place(x=350,y=180)
+ def reg():
+ username = user_F.get()
+ age=Age_F.get()
+ passwd = pwd_F.get()
+ cpasswd = cpwd_F.get()
+ emailid=Email_F.get()
+ print("The name entered by you is",username,passwd)
+ db = mysql.connector.connect(host ="localhost",
+ user = "root",
+ password = "akash",
+ database ="project")
+
+ cursor = db.cursor()
+ savequery = "insert into users values(%s,%s,%s,%s)"
+ recdata=(username,age,emailid,passwd)
+ try:
+ cursor.execute(savequery,recdata)
+ db.commit()
+ db.close()
+ print("entered")
+ sign.destroy()
+ except:
+ db.rollback()
+ print("Error occured")
+ bts = Button(sign, text="Register", command=reg)
+ bts.place(x=350, y=240)
+ dis.place(x=100, y=210)
+
+window.destroy()
+bt2 = Button(window, text="SignUp", command=newsign)
+bt2.place(x=380, y=200)
+window.mainloop()
